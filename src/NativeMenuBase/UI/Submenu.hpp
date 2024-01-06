@@ -58,7 +58,7 @@ public:
 	/// <param name="func">- The function to execute when clicked</param>
 	/// <returns>A pointer to this option instance</returns>
 	//template <typename Function>
-	RegularOption* AddRegularOption(const std::string& text, const std::string& footer, std::function<void()> func = [] {})
+	RegularOption* AddRegularOption(const std::string& text, const std::string& footer, std::function<void(Option*)> func = [](Option*) {})
 	{
 		RegularOption option((int)m_Options.size());
 		option.Text = text;
@@ -76,7 +76,7 @@ public:
 	/// <param name="pbVariable">- Boolean pointer to toggle</param>
 	/// <param name="func">- The function to execute when clicked</param>
 	/// <returns>A pointer to this option instance</returns>
-	BoolOption* AddBoolOption(const std::string& text, const std::string& footer, bool* pBoolVariable, std::function<void()> func = [] {})
+	BoolOption* AddBoolOption(const std::string& text, const std::string& footer, bool* pBoolVariable, std::function<void(Option*)> func = [](Option*) {})
 	{
 		BoolOption option((int)m_Options.size());
 		option.Text = text;
@@ -97,7 +97,7 @@ public:
 	/// <param name="func">- The function to execute when clicked</param>
 	/// <returns>A pointer to this option instance</returns>
 	template<typename T>
-	VectorOption* AddVectorOption(const std::string& text, const std::string& footer, std::vector<T> vec, std::function<void()> func = [] {})
+	VectorOption* AddVectorOption(const std::string& text, const std::string& footer, std::vector<T> vec, std::function<void(Option*)> func = [](Option*) {})
 	{
 		if constexpr (std::is_same_v<const char*, T>)
 		{
@@ -135,7 +135,7 @@ public:
 	/// <param name="endText">- Text at the end of the right text</param>
 	/// <param name="func">- The function to execute when clicked</param>
 	/// <returns>A pointer to this option instance</returns>
-	VectorOption* AddVectorOption(const std::string& text, const std::string& footer, int numElements, const std::string& startText = "", const std::string& endText = "", std::function<void()> func = [] {})
+	VectorOption* AddVectorOption(const std::string& text, const std::string& footer, int numElements, const std::string& startText = "", const std::string& endText = "", std::function<void(Option*)> func = [](Option*) {})
 	{
 		std::vector<std::string> _temp;
 		for (int i = 0; i < numElements; i++)

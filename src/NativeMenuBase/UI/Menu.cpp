@@ -73,7 +73,7 @@ void CNativeMenu::CheckInput()
 {
 	m_ControlIndex = PAD::IS_USING_KEYBOARD_AND_MOUSE(0) ? 0 : 2;
 
-	m_OpenKeyPressed	= IsKeyJustUp(VK_F5) || PAD::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_RB) && PAD::IS_CONTROL_JUST_RELEASED(2, INPUT_CONTEXT_A);
+	m_OpenKeyPressed	= IsKeyJustUp(OPEN_KEY) || PAD::IS_DISABLED_CONTROL_PRESSED(2, INPUT_FRONTEND_RB) && PAD::IS_CONTROL_JUST_RELEASED(2, INPUT_CONTEXT_A);
 	m_EnterKeyPressed	= PAD::IS_CONTROL_JUST_RELEASED(m_ControlIndex, INPUT_GAME_MENU_ACCEPT);
 	m_BackKeyPressed	= PAD::IS_CONTROL_JUST_RELEASED(m_ControlIndex, INPUT_GAME_MENU_CANCEL);
 	m_UpKeyPressed		= PAD::IS_CONTROL_JUST_PRESSED(m_ControlIndex, INPUT_GAME_MENU_UP);
@@ -112,7 +112,7 @@ void CNativeMenu::HandleMouseInput()
 	int numOptions = g_Menu->m_CurrentSubmenu->GetNumberOfOptions();
 	bool canScrollInThisPage = visibleOptions < numOptions;
 
-	_NAMESPACE30::SET_MOUSE_CURSOR_THIS_FRAME();
+	INTERACTION::SET_MOUSE_CURSOR_THIS_FRAME();
 
 	if (PAD::IS_CONTROL_JUST_RELEASED(0, INPUT_GAME_MENU_SCROLL_FORWARD)) {
 		this->HandleUpKeyPressed();
@@ -125,7 +125,7 @@ void CNativeMenu::HandleMouseInput()
 	const int _MaxRelPos = (visibleOptions * (50 + _padding)) - 1;
 
 	// Is Mouse Cursor Moving...
-	if (_NAMESPACE30::_0x2B8B605F2A9E64BF())
+	if (INTERACTION::_POINTER_IS_BEING_MOVED())
 	{
 		if (GetCursorPos(&_cursorPos))
 		{
@@ -300,35 +300,49 @@ void CNativeMenu::HandleRightKeyPressed()
 
 void CNativeMenu::HandleInput()
 {
+	static bool m_SkippingTicks = false;
+
+	if (m_SkippingTicks) {
+		m_SkippingTicks = !m_SkippingTicks;
+		return;
+	}
+
 	if (m_OpenKeyPressed) {
 		m_IsOpen = !m_IsOpen;
 		SetEnabled(m_IsOpen);
+		m_SkippingTicks = true;
 	}
 
 	if (m_IsOpen) {
 		// !m_OpenKeyPressed is a fix where opening with RB + A would enter/leave a submenu prematurely
 		if ((m_SelectPromptCompleted || m_LMBPressed) && !m_OpenKeyPressed) {
 			this->HandleEnterPressed();
+			m_SkippingTicks = true;
 		}
 
 		if (m_BackPromptCompleted && !m_OpenKeyPressed) {
 			this->HandleBackPressed();
+			m_SkippingTicks = true;
 		}
 
 		if (m_UpKeyPressed) {
 			this->HandleUpKeyPressed();
+			m_SkippingTicks = true;
 		}
 
 		if (m_DownKeyPressed) {
 			this->HandleDownKeyPressed();
+			m_SkippingTicks = true;
 		}
 
 		if (m_LeftKeyPressed) {
 			this->HandleLeftKeyPressed();
+			m_SkippingTicks = true;
 		}
 
 		if (m_RightKeyPressed) {
 			this->HandleRightKeyPressed();
+			m_SkippingTicks = true;
 		}
 
 		//HandleMouseInput();

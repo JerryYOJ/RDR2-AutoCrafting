@@ -11,11 +11,26 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="script.cpp" />
-    <ClCompile Include="Submenus\Examples.cpp">
-      <Filter>Submenus</Filter>
-    </ClCompile>
     <ClCompile Include="UI\UIUtil.cpp">
       <Filter>UI\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\MinHook\src\buffer.c">
+      <Filter>lib\MinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\MinHook\src\hook.c">
+      <Filter>lib\MinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\MinHook\src\trampoline.c">
+      <Filter>lib\MinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\MinHook\src\hde\hde32.c">
+      <Filter>lib\MinHook\hde</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\MinHook\src\hde\hde64.c">
+      <Filter>lib\MinHook\hde</Filter>
+    </ClCompile>
+    <ClCompile Include="rage.hpp">
+      <Filter>rage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -40,9 +55,6 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="script.h" />
-    <ClInclude Include="Submenus\Examples.hpp">
-      <Filter>Submenus</Filter>
-    </ClInclude>
     <ClInclude Include="UI\UIUtil.h">
       <Filter>UI\Other</Filter>
     </ClInclude>
@@ -51,9 +63,6 @@
     </ClInclude>
     <ClInclude Include="UI\Submenu.hpp">
       <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Submenus\SubmenuInclude.h">
-      <Filter>Submenus</Filter>
     </ClInclude>
     <ClInclude Include="console.h" />
     <ClInclude Include="UI\Options\BoolOption.h">
@@ -74,6 +83,34 @@
     <ClInclude Include="UI\Options\VectorOption.h">
       <Filter>UI\Options</Filter>
     </ClInclude>
+    <ClInclude Include="eventhandler.hpp" />
+    <ClInclude Include="globals.h" />
+    <ClInclude Include="util.hpp" />
+    <ClInclude Include="..\..\inc\MinHook.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\MinHook\src\buffer.h">
+      <Filter>lib\MinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\MinHook\src\trampoline.h">
+      <Filter>lib\MinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\MinHook\src\hde\hde32.h">
+      <Filter>lib\MinHook\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\MinHook\src\hde\hde64.h">
+      <Filter>lib\MinHook\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\MinHook\src\hde\pstdint.h">
+      <Filter>lib\MinHook\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\MinHook\src\hde\table32.h">
+      <Filter>lib\MinHook\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\MinHook\src\hde\table64.h">
+      <Filter>lib\MinHook\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="hookhandler.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -93,6 +130,15 @@
     </Filter>
     <Filter Include="UI\Options">
       <UniqueIdentifier>{eb9ad464-7bb2-4130-97bb-b1b4cafcf708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\MinHook">
+      <UniqueIdentifier>{faebb4fa-600d-4aac-b11f-567e8703b838}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\MinHook\hde">
+      <UniqueIdentifier>{70b32d61-3b2b-4c95-9554-88ea50dcf9d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rage">
+      <UniqueIdentifier>{4750dfea-84d1-4a26-aaa1-3ef8b7e59efd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
