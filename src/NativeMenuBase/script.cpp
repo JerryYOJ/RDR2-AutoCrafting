@@ -40,6 +40,9 @@ struct craftprompt {
 	}
 }crafting_prompt;
 
+bool debug;
+bool bInitialized;
+
 void InitializeMenu()
 {
 	PRINT_INFO("Populating Menu...");
