@@ -9,7 +9,7 @@ class Option
 {
 private:
 	bool m_bWasJustExecuted = false;
-	std::function<void()> m_Function = nullptr;
+	std::function<void(Option*)> m_Function = nullptr;
 public:
 	std::string Text = "";
 	std::string Footer = "";
@@ -26,7 +26,7 @@ public:
 	virtual ~Option() = default;
 
 	// Set the function of this option that will be executed when clicked
-	void SetFunction(const std::function<void()> &func)
+	void SetFunction(const std::function<void(Option*)> &func)
 	{
 		m_Function = func;
 	}
@@ -43,7 +43,7 @@ public:
 	{
 		if (m_Function != nullptr) {
 			m_bWasJustExecuted = true;
-			m_Function();
+			m_Function(this);
 			m_bWasJustExecuted = false;
 		}
 	}

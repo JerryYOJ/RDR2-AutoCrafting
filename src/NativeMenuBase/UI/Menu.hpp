@@ -9,6 +9,8 @@
 #define BUILD_1311_COMPATIBLE 0 // If true, the menu will be compatible with game version <= 1311.12
 #define SUBMENU g_Menu->AddSubmenu
 
+#define OPEN_KEY VK_MULTIPLY
+
 class CNativeMenu
 {
 private:

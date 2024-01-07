@@ -6,6 +6,18 @@
 #include "UI/UIUtil.h"
 #include "Submenus/Examples.hpp"
 
+#include "eventhandler.hpp"
+#include "hookhandler.hpp"
+#include "util.hpp"
+#include "globals.h"
+#include "console.h"
+
+#include "..\..\inc\MinHook.h"
+
+#include "rage.hpp"
+
+#include "scanner.hpp"
+
 /*
 #########################################################################
 # RDR2 Native UI Menu Base
@@ -32,78 +44,140 @@ HELP & INFO:
 - UI/Menu.hpp is the CNativeMenu class
 - UI/Drawing.cpp does the texture and text drawing for everything
 */
+bool bInitialized = false;
 
+bool crafting_boost = true;
+struct craftprompt {
+	bool agn, stow, craft;
+	Prompt prompt;
 
-bool exampleBool = false;
-const std::vector<std::string> exampleOptionVector = { "First", "Second", "Third", "Last" };
+	void restore() {
+		agn = false;
+		stow = false;
+		craft = false;
+		prompt = 0;
+	}
+}crafting_prompt;
+
+rage::scrThread** m_CurrentScriptThread;
+
+bool IsScript(Hash hash) {
+	return m_CurrentScriptThread && *m_CurrentScriptThread && (*m_CurrentScriptThread)->m_scriptHash == hash;
+}
+
 void InitializeMenu()
 {
-	g_Menu->AddSubmenu("HEADER", "Sub Header", Submenu_EntryMenu, 8, [](Submenu* sub) 
-	{
-			sub->AddRegularOption("Regular Option", "Regular Option Example", [] {
-				UIUtil::PrintSubtitle("~COLOR_BLUE~Regular~s~ option function executed");
-			});
-
-			sub->AddBoolOption("Bool Option", "Bool Option Example", &exampleBool, [] {
-				UIUtil::PrintSubtitle("~COLOR_BLUE~Bool~s~ option function executed. Boolean is " + std::string(exampleBool ? "True" : "False"));
-			});
-
-			sub->AddVectorOption("Vector Option 1", "Vector Option", exampleOptionVector, [] {
-				UIUtil::PrintSubtitle("~COLOR_BLUE~Vector option 1~s~ function executed.");
-			});
-
-			sub->AddVectorOption<int>("Vector Option 2", "Vector Option with an initializer list", { 0, 1, 2, 3, 4, 5 }, [] {
-				UIUtil::PrintSubtitle("~COLOR_BLUE~Vector option 2~s~ function executed.");
-			});
-
-			sub->AddVectorOption<int>("Vector Option 3", "Vector Option with preset vector index 3", { 0, 1, 2, 3, 4, 5 }, [] {
-				UIUtil::PrintSubtitle("~COLOR_BLUE~Vector option 3~s~ function executed.");
-			})->SetVectorIndex(3);
-
-			// 0 based indexing, 0 --> 9 is 10 options
-			sub->AddVectorOption("Vector Option 4", "\"Static\" Vector Option", 10, "Start ", " End", [] {
-				UIUtil::PrintSubtitle("~COLOR_BLUE~Vector option 4~s~ function executed.");
-			});
-
-			// This submenu is created below (Submenu_Examples). This just creates an option for the page
-			// When adding a new submenu option, make sure to actually create the submenu
-			sub->AddSubmenuOption("Submenu Example", "Submenu Option Example", Submenu_Examples);
+	g_Menu->AddSubmenu("AutoCraft", "", Submenu_EntryMenu, 8, [](Submenu* sub)
+		{
+			sub->AddBoolOption("Fast Craft", "", &crafting_boost);
 	});
 
+	PRINT_INFO("Adding Hooks...");
+	{
+		uintptr_t exe_base = (uintptr_t)GetModuleHandle(NULL);
+		PRINT_INFO("RDR2.exe ", exe_base);
+
+		//Auto Crafting
+		NHOOK("_UI_PROMPT_SET_TEXT", exe_base + 0x1061B48, {
+			if (!IsScript(954940763)) goto quit;
+			
+			if (crafting_boost) {
+				PRINT_INFO_SCRIPT("Prompt:", ctx->get_arg<Prompt>(0), " Text:", ctx->get_arg<const char*>(1));
+				if (std::string(ctx->get_arg<const char*>(1)) == "CAMP_REC_COOK_AGN") {
+					crafting_prompt.restore();
+					crafting_prompt.agn = true;
+					crafting_prompt.prompt = ctx->get_arg<Prompt>(0);
+					//HUD::_UI_PROMPT_REGISTER_END(ctx->get_arg<Prompt>(0));
+				}
+				else if (std::string(ctx->get_arg<const char*>(1)) == "STOW_ITEM") {
+					crafting_prompt.restore();
+					crafting_prompt.stow = true;
+					crafting_prompt.prompt = ctx->get_arg<Prompt>(0);
+				}
+				else if (std::string(ctx->get_arg<const char*>(1)) == "CRAFT_FASTER") {
+					crafting_prompt.restore();
+					crafting_prompt.craft = true;
+					crafting_prompt.prompt = ctx->get_arg<Prompt>(0);
+				}
+				else if (std::string(ctx->get_arg<const char*>(1)) == "CAMP_REC_MAKE_AGN") {
+					crafting_prompt.restore();
+					crafting_prompt.agn = true;
+					crafting_prompt.prompt = ctx->get_arg<Prompt>(0);
+				}
+			}
+			
+
+			quit:
+			CALL("_UI_PROMPT_SET_TEXT");
+			});
+		NHOOK("_UI_PROMPT_REGISTER_END", exe_base + 0x1061794, {
+			if (!IsScript(954940763)) goto quit;
+			
+			if (crafting_boost) {
+				//PRINT_INFO_SCRIPT("Logging Prompt:", crafting_prompt.prompt, "   ", ctx->get_arg<Prompt>(0));
+				if (crafting_prompt.prompt != 0 && ctx->get_arg<Prompt>(0) == crafting_prompt.prompt) {
+					if (crafting_prompt.stow || crafting_prompt.agn || crafting_prompt.craft) {
+						HUD::_UI_PROMPT_SET_HOLD_AUTO_FILL_MODE(ctx->get_arg<Prompt>(0), 3400, 1000);
+					}
+				}
+			}
+
+			quit:
+			CALL("_UI_PROMPT_REGISTER_END");
+			});
+		NHOOK("_UI_PROMPT_IS_JUST_PRESSED", exe_base + 0x10616A0, {
+			if (!IsScript(954940763)) goto quit;
+			
+			if (crafting_boost) {
+				//PRINT_INFO_SCRIPT("crafting_prompt.prompt:", crafting_prompt.prompt, " ctx->get_arg<Prompt>(0):", ctx->get_arg<Prompt>(0));
+				if (crafting_prompt.prompt != 0 && crafting_prompt.prompt == ctx->get_arg<Prompt>(0)) {
+					PRINT_INFO_SCRIPT("crafting_prompt.prompt:", crafting_prompt.prompt, " ctx->get_arg<Prompt>(0):", ctx->get_arg<Prompt>(0));
+					PRINT_INFO("", crafting_prompt.agn, " ", crafting_prompt.stow);
+					if (crafting_prompt.agn || crafting_prompt.stow) {
+						if (HUD::_UI_PROMPT_HAS_HOLD_MODE_COMPLETED(ctx->get_arg<Prompt>(0))) {
+							ctx->set_return_value<bool>(true);
+							return;
+						}
+					}
+				}
+			}
+
+			quit:
+			CALL("_UI_PROMPT_IS_JUST_PRESSED");
+			});
+		NHOOK("_UI_PROMPT_IS_PRESSED", exe_base + 0x10616E8, {
+			if (!IsScript(954940763)) goto quit;
+
+			if (crafting_boost) {
+				//PRINT_INFO_SCRIPT("crafting_prompt.prompt:", crafting_prompt.prompt, " ctx->get_arg<Prompt>(0):", ctx->get_arg<Prompt>(0));
+				if (crafting_prompt.prompt != 0 && crafting_prompt.prompt == ctx->get_arg<Prompt>(0)) {
+					PRINT_INFO_SCRIPT("crafting_prompt.prompt:", crafting_prompt.prompt, " ctx->get_arg<Prompt>(0):", ctx->get_arg<Prompt>(0));
+					PRINT_INFO("", crafting_prompt.agn, " ", crafting_prompt.stow);
+					if (crafting_prompt.agn || crafting_prompt.stow) {
+						if (HUD::_UI_PROMPT_HAS_HOLD_MODE_COMPLETED(ctx->get_arg<Prompt>(0))) {
+							ctx->set_return_value<bool>(true);
+							return;
+						}
+					}
+				}
+			}
+
+			quit:
+			CALL("_UI_PROMPT_IS_PRESSED");
+			});
+	}
+
+	bInitialized = true;
+	//printf("case %lu:\n    return \"SLOTID_SATCHEL\";\ncase %lu:\n    return \"SLOTID_ACTIVE_HORSE\";\ncase %lu:\n    return \"SLOTID_UPGRADE\" %lu", MISC::GET_HASH_KEY("SLOTID_SATCHEL"), MISC::GET_HASH_KEY("SLOTID_ACTIVE_HORSE"), MISC::GET_HASH_KEY("SLOTID_UPGRADE"), MISC::GET_HASH_KEY("SLOTID_WARDROBE"));
+
 	// Initialize this submenu
-	g_ExamplesSubmenu->Init();
+	//g_ExamplesSubmenu->Init();
 }
 
 
-void main()
+void NativeMain()
 {
-	g_Menu = std::make_unique<CNativeMenu>();
-
-	InitializeMenu(); // Make sure to call InitializeMenu() before calling any other CNativeMenu (g_Menu) function
-	g_Menu->GoToSubmenu(Submenu_EntryMenu); // We only need to do this manually ONCE. It's automatic. See comment inside function.
-
-	if (!UIUtil::GetScreenDimensions()) {
-		PRINT_WARN("Failed to get Red Dead Redemption 2 game window dimensions. The UI may be sized incorrectly.");
-	}
-
-	while (true)
-	{
-		// This is required. Do not remove.
-		// This makes the menu render everything.
-		g_Menu->Update();
-
-		// Update the vectors in real time ONLY while we're in the time examples submenu
-		// 
-		// You could probably put this in a function called CExampleSubmenu::Tick() that gets called every frame
-		// so it doesn't have to be put here
-		if (g_Menu->GetCurrentSubmenu()->ID == Submenu_Examples_Time) {
-			g_Menu->GetCurrentSubmenu()->GetOption(0)->As<VectorOption*>()->SetVectorIndex(CLOCK::GET_CLOCK_HOURS());
-			g_Menu->GetCurrentSubmenu()->GetOption(1)->As<VectorOption*>()->SetVectorIndex(CLOCK::GET_CLOCK_MINUTES());
-			g_Menu->GetCurrentSubmenu()->GetOption(2)->As<VectorOption*>()->SetVectorIndex(CLOCK::GET_CLOCK_SECONDS());
-		}
-
-		WAIT(0);
-	}
+	return;
 }
 
 
@@ -125,5 +199,34 @@ void WaitAndDraw(unsigned ms)
 
 void ScriptMain()
 {
-	main();
+#if ALLOCATE_CONSOLE
+	AllocateConsole("Debug");
+#endif
+
+	if (!g_Menu) g_Menu = std::make_unique<CNativeMenu>();
+	if (!g_EventHandler) g_EventHandler = std::make_unique<CEventHandler>();
+	if (!g_HookHandler) g_HookHandler = std::make_unique<CHookHandler>();
+
+	if (!bInitialized) InitializeMenu(); // Make sure to call InitializeMenu() before calling any other CNativeMenu (g_Menu) function
+
+	g_Menu->GetSubmenu(Submenu_EntryMenu)->GetOption(g_Menu->GetSubmenu(Submenu_EntryMenu)->GetNumberOfOptions() - 1)->Execute();
+
+	g_Menu->GoToSubmenu(Submenu_EntryMenu); // We only need to do this manually ONCE. It's automatic. See comment inside function.
+
+	if (!UIUtil::GetScreenDimensions()) {
+		PRINT_WARN("Failed to get Red Dead Redemption 2 game window dimensions. The UI may be sized incorrectly.");
+	}
+
+	scanner sc = scanner(nullptr);
+	m_CurrentScriptThread = sc.scan("48 89 2D ? ? ? ? 48 89 2D ? ? ? ? 48 8B 04 F9").Add(3).Rip().As<rage::scrThread**>();
+
+	while (true)
+	{
+		// This is required. Do not remove.
+		// This makes the menu render everything.
+		g_Menu->Update();
+		g_EventHandler->Tick();
+
+		WAIT(0);
+	}
 }

@@ -9,4 +9,5 @@
 #include "common.hpp"
 
 void ScriptMain();
+void NativeMain();
 void WaitAndDraw(unsigned ms);

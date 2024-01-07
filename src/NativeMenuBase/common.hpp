@@ -8,6 +8,12 @@
 #include <memory>
 #include <functional>
 #include <iostream>
+#include <sstream>
+#include <utility>
+#include <exception>
+#include <filesystem>
+#include <span>
+#include <random>
 
 #include "keyboard.h"
 #include "console.h"
