@@ -4,9 +4,6 @@ Added a menu (hotkey '*') to switch the feature on/off
 # Nexus
 https://www.nexusmods.com/reddeadredemption2/mods/3302
 
-# TODO
-Aiming to make ammo crafting automatic (dont need to hold down craft) soon
-
 # Credits
 - Alexander Blade for the Scripthook SDK for RDR2
 - Halen84 menu base
