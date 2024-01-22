@@ -1,5 +1,6 @@
 #include "script.h"
 #include "common.hpp"
+#include "../../inc/enums.h"
 
 #define PRINT_INFO_SCRIPT(...) PRINT("[From ", ScriptHashToString(SCRIPTS::GET_HASH_OF_THIS_SCRIPT_NAME()).c_str(), "][INFO]: ", __VA_ARGS__);
 
@@ -9078,6 +9079,267 @@ inline constexpr std::string ScriptHashToString(Hash ScriptHash) {
 		break;
 	default:
 		return "invalid";
+		break;
+	}
+}
+inline constexpr std::string AmmoHashToString(Hash AmmoHash)
+{
+	switch (AmmoHash)
+	{
+	case 0x7DF4D025:
+		return "AMMO_22";
+		break;
+	case 0x8E919F27:
+		return "AMMO_22_TRANQUILIZER";
+		break;
+	case 0x38E6F55F:
+		return "AMMO_ARROW";
+		break;
+	case 0x1F901FAE:
+		return "AMMO_ARROW_CONFUSION";
+		break;
+	case 0xDC6FE2FE:
+		return "AMMO_ARROW_DISORIENT";
+		break;
+	case 0xA3B9DB42:
+		return "AMMO_ARROW_DRAIN";
+		break;
+	case 0xC1F57A79:
+		return "AMMO_ARROW_DYNAMITE";
+		break;
+	case 0x11B25B49:
+		return "AMMO_ARROW_FIRE";
+		break;
+	case 0x9238061F:
+		return "AMMO_ARROW_IMPROVED";
+		break;
+	case 0x07865A92:
+		return "AMMO_ARROW_POISON";
+		break;
+	case 0xAE6E2B0E:
+		return "AMMO_ARROW_SMALL_GAME";
+		break;
+	case 0x62CEC038:
+		return "AMMO_ARROW_TRACKING";
+		break;
+	case 0xF680010B:
+		return "AMMO_ARROW_TRAIL";
+		break;
+	case 0xB6731F5A:
+		return "AMMO_ARROW_WOUND";
+		break;
+	case 0x020C7A4A:
+		return "AMMO_BOLAS";
+		break;
+	case 0x22E119A9:
+		return "AMMO_BOLAS_HAWKMOTH";
+		break;
+	case 0x9AB3E5C1:
+		return "AMMO_BOLAS_INTERTWINED";
+		break;
+	case 0x87BA17E6:
+		return "AMMO_BOLAS_IRONSPIKED";
+		break;
+	case 0xC4564CBF:
+		return "AMMO_BULLET_EXPLOSIVE";
+		break;
+	case 0xBF3C391A:
+		return "AMMO_BULLET_EXPRESS";
+		break;
+	case 0xEDE7E77B:
+		return "AMMO_BULLET_HIGH_VELOCITY";
+		break;
+	case 0xFB1A7424:
+		return "AMMO_BULLET_NORMAL";
+		break;
+	case 0xA51266E6:
+		return "AMMO_BULLET_SPLIT_POINT";
+		break;
+	case 0xB6976AA1:
+		return "AMMO_CANNON";
+		break;
+	case 0x1C9D6E9D:
+		return "AMMO_DYNAMITE";
+		break;
+	case 0xCAE5CECB:
+		return "AMMO_DYNAMITE_NORMAL";
+		break;
+	case 0x321BA159:
+		return "AMMO_DYNAMITE_VOLATILE";
+		break;
+	case 0x3FCF790D:
+		return "AMMO_FIRE_BOTTLE_NORMAL";
+		break;
+	case 0x52E776C3:
+		return "AMMO_FIRE_BOTTLE_VOLATILE";
+		break;
+	case 0x194631D6:
+		return "AMMO_HATCHET";
+		break;
+	case 0xA9708E57:
+		return "AMMO_HATCHET_ANCIENT";
+		break;
+	case 0xB925EC32:
+		return "AMMO_HATCHET_CLEAVER";
+		break;
+	case 0x63A5047F:
+		return "AMMO_HATCHET_DOUBLE_BIT";
+		break;
+	case 0xCABE0C0F:
+		return "AMMO_HATCHET_DOUBLE_BIT_RUSTED";
+		break;
+	case 0x8507C1F7:
+		return "AMMO_HATCHET_HEWING";
+		break;
+	case 0x1AA32EB0:
+		return "AMMO_HATCHET_HUNTER";
+		break;
+	case 0xBEDC8EB6:
+		return "AMMO_HATCHET_HUNTER_RUSTED";
+		break;
+	case 0xE501537B:
+		return "AMMO_HATCHET_VIKING";
+		break;
+	case 0xEAD00129:
+		return "AMMO_LASSO";
+		break;
+	case 0x5633F9D5:
+		return "AMMO_MOLOTOV";
+		break;
+	case 0x886C55D7:
+		return "AMMO_MOLOTOV_VOLATILE";
+		break;
+	case 0x631C84FC:
+		return "AMMO_MOONSHINEJUG";
+		break;
+	case 0x656A2F3B:
+		return "AMMO_MOONSHINEJUG_MP";
+		break;
+	case 0x743D4F54:
+		return "AMMO_PISTOL";
+		break;
+	case 0x31E2AD5B:
+		return "AMMO_PISTOL_EXPRESS";
+		break;
+	case 0x46A648C2:
+		return "AMMO_PISTOL_EXPRESS_EXPLOSIVE";
+		break;
+	case 0xABD96830:
+		return "AMMO_PISTOL_HIGH_VELOCITY";
+		break;
+	case 0x0E163B80:
+		return "AMMO_PISTOL_SPLIT_POINT";
+		break;
+	case 0x39714C4F:
+		return "AMMO_POISONBOTTLE";
+		break;
+	case 0xB0B80B9A:
+		return "AMMO_REPEATER";
+		break;
+	case 0xDD871DC8:
+		return "AMMO_REPEATER_EXPRESS";
+		break;
+	case 0x9C8B6796:
+		return "AMMO_REPEATER_EXPRESS_EXPLOSIVE";
+		break;
+	case 0x0DCBE210:
+		return "AMMO_REPEATER_HIGH_VELOCITY";
+		break;
+	case 0x44750C88:
+		return "AMMO_REPEATER_SPLIT_POINT";
+		break;
+	case 0x64356159:
+		return "AMMO_REVOLVER";
+		break;
+	case 0x4970588D:
+		return "AMMO_REVOLVER_EXPRESS";
+		break;
+	case 0x04A8EFBB:
+		return "AMMO_REVOLVER_EXPRESS_EXPLOSIVE";
+		break;
+	case 0x83C5E860:
+		return "AMMO_REVOLVER_HIGH_VELOCITY";
+		break;
+	case 0x4A25B008:
+		return "AMMO_REVOLVER_SPLIT_POINT";
+		break;
+	case 0x0D05319F:
+		return "AMMO_RIFLE";
+		break;
+	case 0xB392591E:
+		return "AMMO_RIFLE_ELEPHANT";
+		break;
+	case 0x62A11A4B:
+		return "AMMO_RIFLE_EXPRESS";
+		break;
+	case 0x6D926443:
+		return "AMMO_RIFLE_EXPRESS_EXPLOSIVE";
+		break;
+	case 0x6ECB67F9:
+		return "AMMO_RIFLE_HIGH_VELOCITY";
+		break;
+	case 0x0BEFA5B2:
+		return "AMMO_RIFLE_SPLIT_POINT";
+		break;
+	case 0x90083D3B:
+		return "AMMO_SHOTGUN";
+		break;
+	case 0xBFCB2621:
+		return "AMMO_SHOTGUN_BUCKSHOT_INCENDIARY";
+		break;
+	case 0x12C60041:
+		return "AMMO_SHOTGUN_SLUG";
+		break;
+	case 0x2314B32A:
+		return "AMMO_SHOTGUN_SLUG_EXPLOSIVE";
+		break;
+	case 0x9E4AD291:
+		return "AMMO_THROWING_KNIVES";
+		break;
+	case 0x9117CF91:
+		return "AMMO_THROWING_KNIVES_CONFUSE";
+		break;
+	case 0x59DCB686:
+		return "AMMO_THROWING_KNIVES_DISORIENT";
+		break;
+	case 0x6D0020AB:
+		return "AMMO_THROWING_KNIVES_DRAIN";
+		break;
+	case 0x48DC05F6:
+		return "AMMO_THROWING_KNIVES_IMPROVED";
+		break;
+	case 0xF51D1AC7:
+		return "AMMO_THROWING_KNIVES_JAVIER";
+		break;
+	case 0xD8F38BBD:
+		return "AMMO_THROWING_KNIVES_NORMAL";
+		break;
+	case 0x7BA5E56E:
+		return "AMMO_THROWING_KNIVES_POISON";
+		break;
+	case 0x4BC1020F:
+		return "AMMO_THROWING_KNIVES_TRAIL";
+		break;
+	case 0x9143D131:
+		return "AMMO_THROWING_KNIVES_WOUND";
+		break;
+	case 0xCE156C30:
+		return "AMMO_THROWN_ITEM";
+		break;
+	case 0x49A985D7:
+		return "AMMO_TOMAHAWK";
+		break;
+	case 0xF25D45BC:
+		return "AMMO_TOMAHAWK_ANCIENT";
+		break;
+	case 0xABD7C401:
+		return "AMMO_TOMAHAWK_HOMING";
+		break;
+	case 0xCE489834:
+		return "AMMO_TOMAHAWK_IMPROVED";
+		break;
+	case 0xBA2D509B:
+		return "AMMO_TURRET";
 		break;
 	}
 }

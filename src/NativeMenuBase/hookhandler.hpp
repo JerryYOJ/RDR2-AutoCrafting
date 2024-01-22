@@ -4,7 +4,7 @@
 #include "../../inc/MinHook.h"
 
 #define CALL(name) try { g_HookHandler->Invoke<void, rage::scrNativeCallContext*>(name, ctx); } catch(std::exception& e) { PRINT_ERROR(e.what()); }
-#define NHOOK(name, ptr, callback) g_HookHandler->Hook<void(rage::scrNativeCallContext*)>(name, (LPVOID)(ptr), [](rage::scrNativeCallContext* ctx)callback)
+#define NHOOK(name, ptr, callback) g_HookHandler->Hook<void(rage::scrNativeCallContext*)>(name, GetNativeHandler(ptr), [](rage::scrNativeCallContext* ctx)callback)
 
 class CHookHandler {
 	std::unordered_map<std::string, void*> Original;

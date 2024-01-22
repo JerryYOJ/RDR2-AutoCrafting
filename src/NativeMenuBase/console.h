@@ -6,7 +6,7 @@
 
 // Allocate a console be used for debugging purposes
 // BE SURE TO SET THIS TO 0 FOR RELEASE BUILDS
-#define ALLOCATE_CONSOLE 1
+#define ALLOCATE_CONSOLE 0
 
 #if ALLOCATE_CONSOLE
 // Print stuff to the standard console
